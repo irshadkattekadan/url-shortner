@@ -14,10 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', ['as'=> '/', 'uses' => 'Auth\LoginController@showLoginForm']);
 
 Auth::routes();
+Route::get('u/{code}', ['as' => 'shorten-url', 'uses' => 'UrlController@getShortenUrl']);
+Route::group(['middleware' => ['auth:web']], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::group(['prefix' => 'url', 'as' => 'url.'], function () {
 
-Route::get('/home', 'HomeController@index')->name('home');
+        Route::get('urls', 'UrlController@index')->name('index');
+        Route::post('urls', 'UrlController@store')->name('create');
+
+    });
+
+});
