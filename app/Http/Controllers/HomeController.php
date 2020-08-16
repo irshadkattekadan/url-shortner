@@ -33,7 +33,7 @@ class HomeController extends Controller
 
     private function getDuplicateUrlsCount(){
         $grouped_urls = Url::select(DB::raw('count(*) as count'), 'url')->groupBy('url')->get();
-        return $grouped_urls->where('count', '>', 1)->count();
+        return $grouped_urls->where('count', '>', 1)->sum('count');
     }
 
 }
